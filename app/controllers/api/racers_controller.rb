@@ -3,11 +3,19 @@ module Api
     before_action :set_racer, only: [:show, :edit, :update, :destroy]
 
     def index
-      @racers = Racer.all
+      if !request.accept || request.accept == "*/*"
+        render plain: "/api/racers"
+      else
+        @racers = Racer.all
+      end
     end
 
     def show
-      @races=@racer.races
+      if !request.accept || request.accept == "*/*"
+        render plain: "/api/racers/#{params[:racer_id]}"
+      else
+        @races=@racer.races
+      end
     end
 
     def create
@@ -17,7 +25,7 @@ module Api
     def update
       @racer.update(racer_params)
     end
-    
+
     def destroy
       @racer.destroy
     end

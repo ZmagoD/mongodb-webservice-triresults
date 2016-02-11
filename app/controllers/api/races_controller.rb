@@ -3,11 +3,19 @@ module Api
     before_action :set_race, only: [:show, :edit, :update, :destroy]
 
     def index
-      @races = Race.all.order_by(date: :desc)
+      if !request.accept || request.accept == "*/*"
+        render plain: "/api/races"
+      else
+        @races = Race.all.order_by(date: :desc)
+      end
     end
 
     def show
-      @entrants = Entrant.where(:"race._id"=>@race.id).order_by(secs: :asc, last_name: :asc, first_name: :asc).to_a
+      if !request.accept || request.accept == "*/*"
+        render plain: "/api/races/#{params[:race_id]}"
+      else
+        @entrants = Entrant.where(:"race._id"=>@race.id).order_by(secs: :asc, last_name: :asc, first_name: :asc).to_a
+      end
     end
 
     def create
