@@ -11,10 +11,10 @@ json.group result.group.name
 json.group_place result.group_place
 json.swim format_hours  result.swim_secs  #  " 0:#{format_minutes result.swim.secs}"
 json.pace_100 format_minutes result.swim_pace_100
-# json.t1_secs formate_seconds result.t1
+json.t1 format_minutes result.t1_secs
 json.bike format_hours result.bike_secs
 json.mph  format_mph result.bike_mph
-# json.t2_secs formate_seconds result.t2
+json.t2 format_minutes result.t2_secs
 json.run format_hours result.run_secs
 # json.run_mmile formate_time result.mmile
 
