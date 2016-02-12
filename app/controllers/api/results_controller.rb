@@ -12,6 +12,7 @@ module Api
         #byebug
         race=Race.find(params[:race_id])
         @entrants=race.entrants
+        fresh_when last_modified: @entrants.max(:updated_at)
       end
     end
 
