@@ -18,8 +18,5 @@ module Api
         render plain: api_racer_entry_path(params[:racer_id], params[:id])
       end
     end
-
-    def update
-    end
   end
 end

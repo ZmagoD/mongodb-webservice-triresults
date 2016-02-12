@@ -19,14 +19,5 @@ module Api
          render plain: api_racer_path(params[:id])
       end
     end
-
-
-
-    private
-
-      # Never trust parameters from the scary internet, only allow the white list through.
-      def racer_params
-        params.require(:racer).permit(:first_name, :last_name, :gender, :birth_year, :city, :state)
-      end
   end
 end

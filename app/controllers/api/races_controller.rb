@@ -2,6 +2,7 @@ module Api
   class RacesController < ApplicationController
 
 
+
     def index
       # if !request.accept || request.accept == "*/*"
       #   render plain: "/api/races"
@@ -62,7 +63,19 @@ module Api
       race.destroy
       render :nothing=>true, :status=>:no_content
     end
+    rescue_from Mongoid::Errors::DocumentNotFound do |exception|
+      #byebug
+      render :status=>:not_found,
+        :template=>"api/races/error_msg",
+        :locals=>{ :msg=>"woops: cannot find race[#{params[:id]}]" }
+    end
 
+    rescue_from ActionView::MissingTemplate do |exception|
+      Rails.logger.debug exception
+      render plain: "woops: we do not support that content-type[#{request.accept}]",
+        :status=>:unsupported_media_type
+
+    end
     private
 
       # Never trust parameters from the scary internet, only allow the white list through.
