@@ -1,44 +1,73 @@
 module Api
   class RacesController < ApplicationController
-    before_action :set_race, only: [:show, :edit, :update, :destroy]
+
 
     def index
+      # if !request.accept || request.accept == "*/*"
+      #   render plain: "/api/races"
+      # else
+      #   # @races = Race.all.order_by(date: :desc)
+      #   # render json: @races, status:200
+      #   render plain: api_races_path
+      # end
       if !request.accept || request.accept == "*/*"
-        render plain: "/api/races"
-      else
-        @races = Race.all.order_by(date: :desc)
+        if !params[:offset].nil? and !params[:limit].nil?
+          render plain: "#{api_races_path}, offset=[#{params[:offset]}], limit=[#{params[:limit]}]"
+        else
+          render plain: api_races_path
+        end
       end
     end
 
     def show
+      # if !request.accept || request.accept == "*/*"
+      #   render plain: "/api/races/#{params[:race_id]}"
+      # else
+      #   # @race = Race.find(params[:id])
+      #   # render json: @race, status: 200
+      #   @race = Race.find(params[:id])
+      #   render :show
+      # end
       if !request.accept || request.accept == "*/*"
-        render plain: "/api/races/#{params[:race_id]}"
-      else
-        @entrants = Entrant.where(:"race._id"=>@race.id).order_by(secs: :asc, last_name: :asc, first_name: :asc).to_a
-      end
+         render plain: api_race_path(params[:id])
+       else
+         @race = Race.find(params[:id])
+         render :show
+       end
     end
 
     def create
-      @race = Race.create(race_params)
+      if !request.accept || request.accept == "*/*"
+        if !params[:race].nil?
+          render plain: params[:race][:name]
+        else
+          render plain: :nothing, status: :ok
+        end
+      else
+        if !params[:race].nil?
+          Race.create(race_params)
+          render plain: race_params[:name], status: :created
+        end
+      end
     end
 
     def update
-      @race.update(race_params)
+      race = Race.find(params[:id])
+      race.update(race_params)
+      render json: race
     end
 
     def destroy
-      @race.destroy
+      race = Race.find(params[:id])
+      race.destroy
+      render :nothing=>true, :status=>:no_content
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_race
-        @race = Race.find(params[:id])
-      end
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def race_params
-        params.require(:race).permit(:name, :date, :city, :state, :swim_distance, :swim_units, :bike_distance, :bike_units, :run_distance, :run_units)
+        params.require(:race).permit(:name, :date)
       end
   end
 end

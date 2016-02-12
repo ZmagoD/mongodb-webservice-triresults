@@ -1,40 +1,28 @@
 module Api
   class RacersController < ApplicationController
-    before_action :set_racer, only: [:show, :edit, :update, :destroy]
+
 
     def index
       if !request.accept || request.accept == "*/*"
-        render plain: "/api/racers"
-      else
-        @racers = Racer.all
+        render plain: api_racers_path
       end
     end
 
     def show
+      # if !request.accept || request.accept == "*/*"
+      #   render plain: "/api/racers/#{params[:racer_id]}"
+      # else
+      #   @races=@racer.races
+      #   render json: @racers, status:200
+      # end
       if !request.accept || request.accept == "*/*"
-        render plain: "/api/racers/#{params[:racer_id]}"
-      else
-        @races=@racer.races
+         render plain: api_racer_path(params[:id])
       end
     end
 
-    def create
-      @racer = Racer.create(racer_params)
-    end
 
-    def update
-      @racer.update(racer_params)
-    end
-
-    def destroy
-      @racer.destroy
-    end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_racer
-        @racer = Racer.find(params[:id])
-      end
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def racer_params
